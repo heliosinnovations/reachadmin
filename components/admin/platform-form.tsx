@@ -25,6 +25,7 @@ export function PlatformForm({ platform, onSubmit, loading }: PlatformFormProps)
   const [oauthScopes, setOauthScopes] = useState((platform?.oauthScopes || []).join(' '))
   const [apiBaseUrl, setApiBaseUrl] = useState(platform?.apiBaseUrl || '')
   const [isEnabled, setIsEnabled] = useState(platform?.isEnabled || false)
+  const [developerToken, setDeveloperToken] = useState((platform?.config as any)?.developerToken || '')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -51,6 +52,9 @@ export function PlatformForm({ platform, onSubmit, loading }: PlatformFormProps)
           .filter(Boolean),
         apiBaseUrl: apiBaseUrl.trim() || undefined,
         isEnabled,
+        config: developerToken.trim()
+          ? { ...((platform?.config as any) || {}), developerToken: developerToken.trim() }
+          : platform?.config || undefined,
       })
     } catch (err: any) {
       setError(err?.response?.data?.error?.message || err.message || 'Failed to save platform')
@@ -229,6 +233,24 @@ export function PlatformForm({ platform, onSubmit, loading }: PlatformFormProps)
               placeholder="https://graph.facebook.com/v21.0"
             />
           </div>
+          {slug === 'google_ads' && (
+            <div className="col-span-2">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Google Ads Developer Token
+              </label>
+              <input
+                type="password"
+                value={developerToken}
+                onChange={(e) => setDeveloperToken(e.target.value)}
+                className="w-full h-9 px-3 rounded-lg border border-gray-200 text-sm focus:outline-none focus:border-purple-600"
+                placeholder="Get from Google Ads → Tools → API Center"
+              />
+              <p className="text-xs text-gray-400 mt-1">
+                Required for campaign management and auto-discovery of Ads Customer ID.
+                Find it at <strong>Google Ads → Tools → API Center</strong>.
+              </p>
+            </div>
+          )}
         </div>
       </div>
 
