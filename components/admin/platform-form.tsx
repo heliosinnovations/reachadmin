@@ -22,7 +22,7 @@ export function PlatformForm({ platform, onSubmit, loading }: PlatformFormProps)
   const [oauthClientSecret, setOauthClientSecret] = useState(platform?.oauthClientSecret || '')
   const [oauthAuthUrl, setOauthAuthUrl] = useState(platform?.oauthAuthUrl || '')
   const [oauthTokenUrl, setOauthTokenUrl] = useState(platform?.oauthTokenUrl || '')
-  const [oauthScopes, setOauthScopes] = useState((platform?.oauthScopes || []).join(', '))
+  const [oauthScopes, setOauthScopes] = useState((platform?.oauthScopes || []).join(' '))
   const [apiBaseUrl, setApiBaseUrl] = useState(platform?.apiBaseUrl || '')
   const [isEnabled, setIsEnabled] = useState(platform?.isEnabled || false)
 
@@ -46,7 +46,7 @@ export function PlatformForm({ platform, onSubmit, loading }: PlatformFormProps)
         oauthAuthUrl: oauthAuthUrl.trim() || undefined,
         oauthTokenUrl: oauthTokenUrl.trim() || undefined,
         oauthScopes: oauthScopes
-          .split(',')
+          .split(/[\s,]+/)
           .map((s) => s.trim())
           .filter(Boolean),
         apiBaseUrl: apiBaseUrl.trim() || undefined,
@@ -207,15 +207,15 @@ export function PlatformForm({ platform, onSubmit, loading }: PlatformFormProps)
             />
           </div>
           <div className="col-span-2">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Scopes (comma-separated)</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Scopes (space-separated)</label>
             <input
               type="text"
               value={oauthScopes}
               onChange={(e) => setOauthScopes(e.target.value)}
               className="w-full h-9 px-3 rounded-lg border border-gray-200 text-sm focus:outline-none focus:border-purple-600"
               placeholder={
-                slug === 'google_ads' ? 'https://www.googleapis.com/auth/adwords' :
-                'pages_show_list, pages_read_engagement, pages_manage_posts'
+                slug === 'google_ads' ? 'https://www.googleapis.com/auth/adwords https://www.googleapis.com/auth/userinfo.email' :
+                'pages_show_list pages_read_engagement pages_manage_posts'
               }
             />
           </div>
