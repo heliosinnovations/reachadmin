@@ -50,4 +50,18 @@ export const authApi = {
     const response = await apiClient.get('/users/me')
     return response.data.data || response.data
   },
+
+  /**
+   * Check if the current user has admin access.
+   * Hits an admin-only endpoint — returns true if allowed, false if 403.
+   */
+  checkAdminAccess: async (): Promise<boolean> => {
+    try {
+      await apiClient.get('/admin/platforms')
+      return true
+    } catch (err: any) {
+      if (err?.response?.status === 403) return false
+      throw err // re-throw network errors, 401s, etc.
+    }
+  },
 }

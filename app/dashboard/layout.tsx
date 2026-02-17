@@ -25,10 +25,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       return
     }
     // Verify auth and check admin role
-    authApi.getProfile()
-      .then((profile) => {
-        const roles: string[] = (profile.roles || []).map((r: any) => r.name || r)
-        if (!roles.includes('admin')) {
+    authApi.checkAdminAccess()
+      .then((isAdmin) => {
+        if (!isAdmin) {
           tokenStorage.clearTokens()
           router.push('/signin?error=unauthorized')
           return
