@@ -10,7 +10,8 @@ function SignInForm() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState(
-    searchParams.get('error') === 'oauth_failed' ? 'OAuth sign in failed. Please try again.' : ''
+    searchParams.get('error') === 'oauth_failed' ? 'OAuth sign in failed. Please try again.' :
+    searchParams.get('error') === 'unauthorized' ? 'Access denied. This panel is for admins only.' : ''
   )
   const [loading, setLoading] = useState(false)
   const [oauthLoading, setOauthLoading] = useState(false)
